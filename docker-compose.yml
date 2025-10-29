@@ -8,8 +8,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      API_ID: "${API_ID}"
-      API_HASH: "${API_HASH}"
+      TELEGRAM_API_ID: "${TELEGRAM_API_ID}"
+      TELEGRAM_API_HASH: "${TELEGRAM_API_HASH}"
     command: >
       sh -c "
         apk add --no-cache git && \
