@@ -22,8 +22,5 @@ services:
       "
     volumes:
       - telegram-web-a-data:/app
-    env_file:
-      - .env
-
 volumes:
   telegram-web-a-data:
