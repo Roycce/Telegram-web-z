@@ -7,11 +7,10 @@ services:
     working_dir: /app
     ports:
       - "3000:3000"
-    volumes:
-      - ./telegram-web-a:/app          # Папка с твоим проектом на хосте
-      - ./telegram-web-a/.cache:/app/.cache  # Кэш, чтобы не терять данные между перезапусками
     environment:
-      API_ID: "123456"                  # Замени на свой API ID
+      API_ID: "123456"             # Замени на свой API ID
       API_HASH: "abcdef1234567890abcdef1234567890"  # Замени на свой API HASH
     command: >
-      sh -c "npm install && npm run dev"
+      sh -c "apk add --no-cache git && \
+             git clone https://github.com/Roycce/Telegram-web-z.git /app && \
+             npm install && npm run dev"
