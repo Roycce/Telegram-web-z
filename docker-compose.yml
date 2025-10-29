@@ -1,5 +1,4 @@
 version: "3.9"
-
 services:
   telegram-web-a:
     image: node:22-alpine
@@ -9,6 +8,8 @@ services:
       TELEGRAM_API_ID: "${TELEGRAM_API_ID}"
       TELEGRAM_API_HASH: "${TELEGRAM_API_HASH}"
       PORT: 1234
+    ports:
+      - "1234:1234"   # ← ЗДЕСЬ! На одном уровне с environment, volumes и т.д.
     command: >
       sh -c "
         apk add --no-cache git && \
@@ -20,7 +21,7 @@ services:
         echo 'Installing dependencies...' && \
         npm install --verbose && \
         echo 'Starting dev server...' && \
-        npx cross-env APP_ENV=development webpack serve --mode development
+        npx cross-env APP_ENV=development PORT=1234 webpack serve --mode development --port 1234
       "
     volumes:
       - telegram-web-a-data:/app
