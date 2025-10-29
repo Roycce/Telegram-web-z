@@ -283,10 +283,14 @@ export default function createConfig(
 }
 
 function getGitMetadata() {
-  const gitRevisionPlugin = new GitRevisionPlugin();
-  const branch = HEAD || gitRevisionPlugin.branch();
-  const commit = gitRevisionPlugin.commithash()?.substring(0, 7);
-  return { branch, commit };
+  try {
+    return {
+      branch: gitRevisionPlugin.branch(),
+      commit: gitRevisionPlugin.commithash(),
+    };
+  } catch {
+    return { branch: null, commit: 'unknown' };
+  }
 }
 
 class WebpackContextExtension {
