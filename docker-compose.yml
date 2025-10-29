@@ -11,6 +11,17 @@ services:
       API_ID: "123456"             # Замени на свой API ID
       API_HASH: "abcdef1234567890abcdef1234567890"  # Замени на свой API HASH
     command: >
-      sh -c "apk add --no-cache git && \
-             git clone https://github.com/Roycce/Telegram-web-z.git /app && \
-             npm install && npm run dev"
+      sh -c "
+        apk add --no-cache git && \
+        rm -rf /tmp/repo /app/* && \
+        git clone https://github.com/Roycce/Telegram-web-z.git /tmp/repo && \
+        cp -r /tmp/repo/* /app/ && \
+        cd /app && \
+        npm install && \
+        npm run dev
+      "
+    volumes:
+      - telegram-web-a-data:/app
+
+volumes:
+  telegram-web-a-data:
