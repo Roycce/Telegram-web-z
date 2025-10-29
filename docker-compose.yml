@@ -16,17 +16,22 @@ services:
         git clone --depth 1 https://github.com/Roycce/Telegram-web-z.git /tmp/repo && \
         cp -r /tmp/repo/. /app/ && \
         cd /app && \
-        npm install && \
+        npm set timeout=600000 && \
+        npm set fetch-retries=5 && \
+        npm set fetch-retry-maxtimeout=120000 && \
+        npm install --verbose || (sleep 10 && npm install --verbose) && \
         npm run dev
       "
     volumes:
       - telegram-web-a-data:/app
+      - node-modules:/app/node_modules
     networks:
-      - docker_infra-net  # ← ТУТ!
+      - docker_infra-net
 
 networks:
   docker_infra-net:
-    external: true  # ← Сеть уже есть
+    external: true
 
 volumes:
   telegram-web-a-data:
+  node-modules:
