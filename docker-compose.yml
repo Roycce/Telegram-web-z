@@ -8,8 +8,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      API_ID:
-      API_HASH:
+      API_ID: "${API_ID}"
+      API_HASH: "${API_HASH}"
     command: >
       sh -c "
         apk add --no-cache git && \
@@ -22,6 +22,8 @@ services:
       "
     volumes:
       - telegram-web-a-data:/app
+    env_file:
+      - .env
 
 volumes:
   telegram-web-a-data:
