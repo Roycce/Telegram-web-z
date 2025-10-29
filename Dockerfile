@@ -1,36 +1,25 @@
-# 1️⃣ Этап сборки
-FROM node:18-alpine AS builder
+FROM node:18-alpine
 
-# Установим git (иначе npm install не сможет подтянуть пакеты из GitHub)
+# Установим git
 RUN apk add --no-cache git
 
 # Рабочая директория
 WORKDIR /app
 
-# Скопируем проект из репозитория
-RUN git clone https://github.com/Roycce/Telegram-web-z.git . 
+# Копируем всё внутрь контейнера
+COPY . .
 
-# Иногда Portainer ломает .git, поэтому создаём фейковый репозиторий
+# Иногда Portainer копирует без .git — создаём фиктивный репозиторий, чтобы не ломался GitRevisionPlugin
 RUN [ -d .git ] || git init && git add . && git commit -m "fake commit"
 
-# Устанавливаем зависимости
+# Установка зависимостей и сборка проекта
 RUN npm install
-
-# Собираем фронтенд
 RUN npm run build
 
-# 2️⃣ Этап запуска (лёгкий образ для продакшна)
-FROM node:18-alpine AS runner
-
-WORKDIR /app
-
-# Копируем собранный билд из первого этапа
-COPY --from=builder /app/dist ./dist
-
-# Устанавливаем лёгкий HTTP сервер
+# Устанавливаем лёгкий HTTP-сервер
 RUN npm install -g serve
 
-# Экспонируем порт 1234 (или 80 — как хочешь)
+# Открываем порт 1234
 EXPOSE 1234
 
 # Запускаем
