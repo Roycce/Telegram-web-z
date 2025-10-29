@@ -12,14 +12,17 @@ services:
     command: >
       sh -c "
         apk add --no-cache git && \
-        rm -rf /tmp/repo /app/* && \
+        rm -rf /tmp/repo /app/* /app/.* || true && \
         git clone --depth 1 https://github.com/Roycce/Telegram-web-z.git /tmp/repo && \
         cp -r /tmp/repo/. /app/ && \
+        echo 'Files in /app/:' && ls -la /app/ | head -20 && \
+        if [ ! -f /app/package.json ]; then echo 'FATAL: package.json missing!'; exit 1; fi && \
         cd /app && \
-        npm set timeout=600000 && \
-        npm set fetch-retries=5 && \
-        npm set fetch-retry-maxtimeout=120000 && \
-        npm install --verbose || (sleep 10 && npm install --verbose) && \
+        if [ ! -d node_modules ] || [ ! -f package-lock.json ]; then \
+          npm install --verbose; \
+        else \
+          echo 'node_modules already installed, skipping npm install'; \
+        fi && \
         npm run dev
       "
     volumes:
