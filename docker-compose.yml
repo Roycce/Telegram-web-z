@@ -2,25 +2,31 @@ version: "3.9"
 
 services:
   telegram-web-a:
-    image: node:20-alpine
+    image: node:22-alpine
     container_name: telegram-web-a
     working_dir: /app
-    ports:
-      - "3000:3000"
     environment:
       TELEGRAM_API_ID: "${TELEGRAM_API_ID}"
       TELEGRAM_API_HASH: "${TELEGRAM_API_HASH}"
+      PORT: 1234
     command: >
       sh -c "
         apk add --no-cache git && \
         rm -rf /tmp/repo /app/* && \
-        git clone https://github.com/Roycce/Telegram-web-z.git /tmp/repo && \
-        cp -r /tmp/repo/* /app/ && \
+        git clone --depth 1 https://github.com/Roycce/Telegram-web-z.git /tmp/repo && \
+        cp -r /tmp/repo/. /app/ && \
         cd /app && \
         npm install && \
         npm run dev
       "
     volumes:
       - telegram-web-a-data:/app
+    networks:
+      - docker_infra-net  # ← ТУТ!
+
+networks:
+  docker_infra-net:
+    external: true  # ← Сеть уже есть
+
 volumes:
   telegram-web-a-data:
